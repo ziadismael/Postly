@@ -1,5 +1,5 @@
 import express from 'express';
-import { PORT } from './';
+import { PORT } from './config//env.js';
 import connectDB from './database/mongodb.js';
 import authRouter from './routes/auth.routes.js';
 import postRouter from './routes/post.routes.js';
