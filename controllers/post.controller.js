@@ -9,7 +9,7 @@ const createPost = async (req, res, next) => {
     const post = new Post({
       title,
       content,
-      user: req.user._id, // Link the post to the logged-in user
+      author: req.user._id, // Link the post to the logged-in user
     });
 
     const createdPost = await post.save();
@@ -22,9 +22,9 @@ const createPost = async (req, res, next) => {
 
 // @desc    Get all posts
 // @route   GET /api/posts
-const getPosts = async (req, res) => {
+const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find({}).populate('user', 'name email'); // Populate with user's name and email
+    const posts = await Post.find({}).populate('author', 'name email'); // Populate with user's name and email
     res.json(posts);
   } catch (error) {
     error.statusCode = 500;
@@ -34,10 +34,10 @@ const getPosts = async (req, res) => {
 
 // @desc    Get single post by ID
 // @route   GET /api/posts/:id
-const getPostById = async (req, res) => {
+const getPostById = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.id).populate(
-      'user',
+      'author',
       'name email'
     );
 
@@ -54,7 +54,7 @@ const getPostById = async (req, res) => {
 
 // @desc    Update a post
 // @route   PUT /api/posts/:id
-const updatePost = async (req, res) => {
+const updatePost = async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const post = await Post.findById(req.params.id);
@@ -64,7 +64,7 @@ const updatePost = async (req, res) => {
     }
 
     // Check if the logged-in user is the author of the post
-    if (post.user.toString() !== req.user._id.toString()) {
+    if (post.author.toString() !== req.user._id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
@@ -81,7 +81,7 @@ const updatePost = async (req, res) => {
 
 // @desc    Delete a post
 // @route   DELETE /api/posts/:id
-const deletePost = async (req, res) => {
+const deletePost = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.id);
 
@@ -90,7 +90,7 @@ const deletePost = async (req, res) => {
     }
 
     // Check if the logged-in user is the author of the post
-    if (post.user.toString() !== req.user._id.toString()) {
+    if (post.author.toString() !== req.user._id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 

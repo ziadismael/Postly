@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
-app.use("api/posts", postRouter);
+app.use("/api/posts", postRouter);
 
 // A simple test route to make sure our server is working
 app.get('/', (req, res) => {
@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on http::/localhost:${PORT}/`);
     await connectDB();
 });
 

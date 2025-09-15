@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
     try {
         const { name, email, username, password } = req.body;
 
@@ -19,7 +19,7 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({ name, email, username, password: hashedPassword });
 
-        const token = jwt.sign({userID: newUsers[0]._id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
+        const token = jwt.sign({userID: user._id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
         
         req.user = user;
         res.status(201).json({
@@ -36,7 +36,7 @@ export const signup = async (req, res) => {
     }
 };
 
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
     try{
         const { email, password } = req.body;
         const user = await User.findOne({ email });
