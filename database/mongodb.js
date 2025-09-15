@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { MONGO_URI } from '../config/config.js';
+import { MONGO_URI } from '../config/env.js';
 
 if (!MONGO_URI) {
     throw new Error('MONGO_URI is not defined in the environment variables .env');
